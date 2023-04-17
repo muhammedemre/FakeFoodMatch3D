@@ -12,7 +12,7 @@ public class UICanvasOfficer : MonoBehaviour
     [SerializeField] float splashScreenDuration;    
     public GameObject itemBoxes;
 
-    [SerializeField] TextMeshProUGUI skill1Text, skill2Text, skill3Text, skill4Text;
+    public TextMeshProUGUI skill1Text, skill2Text, skill3Text, skill4Text;
     
 
     public void DisplaySplashScreen()

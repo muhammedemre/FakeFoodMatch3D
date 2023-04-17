@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using DG.Tweening;
 using System;
 
@@ -14,6 +15,7 @@ public class LevelSkillOfficer : MonoBehaviour
     {
         if (skillFreezeAmount > 0)
         {
+            SkillCoolDown(UIManager.instance.uICanvasOfficer.skill3Text.transform);
             skillFreezeAmount--;
             UIManager.instance.uICanvasOfficer.LevelSkillAmountsUpdate(skillIdeaAmount, skillUndoAmount, skillFreezeAmount, skillShuffleAmount);
 
@@ -29,6 +31,7 @@ public class LevelSkillOfficer : MonoBehaviour
         {
             return;
         }
+        SkillCoolDown(UIManager.instance.uICanvasOfficer.skill2Text.transform);
         skillUndoAmount--;
         UIManager.instance.uICanvasOfficer.LevelSkillAmountsUpdate(skillIdeaAmount, skillUndoAmount, skillFreezeAmount, skillShuffleAmount);
 
@@ -41,8 +44,16 @@ public class LevelSkillOfficer : MonoBehaviour
 
     void SendBackTheItem(ItemActor lastItem)
     {
-        Transform randomItemFromContainer = LevelManager.instance.levelCreateOfficer.currentLevel.itemContainer.GetChild(UnityEngine.Random.Range(0, 
+        Transform randomItemFromContainer;
+        while (true) 
+        {
+            randomItemFromContainer = LevelManager.instance.levelCreateOfficer.currentLevel.itemContainer.GetChild(UnityEngine.Random.Range(0,
             LevelManager.instance.levelCreateOfficer.currentLevel.itemContainer.childCount));
+            if (randomItemFromContainer.GetComponent<ItemActor>().pickedTime == 555555)
+            {
+                break;
+            }
+        }       
         Vector3 sendBackPosition = randomItemFromContainer.position + new Vector3(0f, itemSendBackReleaseHeight, 0f);
         lastItem.transform.DOScale(Vector3.one, itemSendBackDuration);
         lastItem.transform.DORotate(new Vector3(UnityEngine.Random.Range(0,360), UnityEngine.Random.Range(0, 360), UnityEngine.Random.Range(0, 360)), itemSendBackDuration);
@@ -56,6 +67,7 @@ public class LevelSkillOfficer : MonoBehaviour
         {
             return;
         }
+        SkillCoolDown(UIManager.instance.uICanvasOfficer.skill1Text.transform);
         skillIdeaAmount--;
         UIManager.instance.uICanvasOfficer.LevelSkillAmountsUpdate(skillIdeaAmount, skillUndoAmount, skillFreezeAmount, skillShuffleAmount);
 
@@ -106,6 +118,7 @@ public class LevelSkillOfficer : MonoBehaviour
         {
             return;
         }
+        SkillCoolDown(UIManager.instance.uICanvasOfficer.skill4Text.transform);
         skillShuffleAmount--;
         UIManager.instance.uICanvasOfficer.LevelSkillAmountsUpdate(skillIdeaAmount, skillUndoAmount, skillFreezeAmount, skillShuffleAmount);
 
@@ -122,5 +135,16 @@ public class LevelSkillOfficer : MonoBehaviour
     {
         Vector3 randomRotation = new Vector3(UnityEngine.Random.Range(0f, 360f), 0f, UnityEngine.Random.Range(0f, 360f));
         item.GetComponent<Rigidbody>().AddForce((randomRotation * UnityEngine.Random.Range(0, shuffleForcePower))+ new Vector3(0f, UnityEngine.Random.Range(0f, shuffleForceYPower), 0f));
+    }
+
+    void SkillCoolDown(Transform skill) 
+    {
+        skill.parent.GetComponent<Button>().interactable = false;
+        Image coolDownImage = skill.parent.GetChild(1).GetComponent<Image>();
+        coolDownImage.fillAmount = 1;
+        DOTween.To(x =>
+        {
+            coolDownImage.fillAmount = x;
+        }, 1, 0, timeFreezeDuration).SetEase(Ease.OutSine).OnComplete(()=> skill.parent.GetComponent<Button>().interactable = true);
     }
 }
