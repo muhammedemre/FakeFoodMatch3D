@@ -23,10 +23,6 @@ public class UITaskOfficers : MonoBehaviour
         GameManager.instance.gameManagerObserverOfficer.Publish(ObserverSubjects.PreLevelInstantiate);
     }
 
-    public void Test() 
-    {
-        print("TEST");
-    }
 
     public void LevelInfoButton() 
     {

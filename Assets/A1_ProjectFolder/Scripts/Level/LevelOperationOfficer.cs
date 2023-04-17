@@ -26,7 +26,6 @@ public class LevelOperationOfficer : MonoBehaviour
     public void GoalReachCheck()
     {
         LevelFinishStates finishState = SuccessCheck() ? LevelFinishStates.success_ReachedTheGoal : LevelFinishStates.fail_NotReachedGoal;
-        print("GoalReachCheck: "+finishState);
         LevelFinished(finishState);
     }
 
